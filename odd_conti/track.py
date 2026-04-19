@@ -79,35 +79,43 @@ class Track:
     def to_remotion_props(
         self,
         variant: str = "sub",
+        stills_variant: Optional[str] = None,
         audio_url_base: str = "http://localhost:8899/outputs",
         clip_ext: str = ".mp4",
         still_ext: str = ".png",
         playback_rates: Optional[dict[str, float]] = None,
         transitions: Optional[dict[str, str]] = None,
         clip_url_prefix: Optional[str] = None,
+        still_url_prefix: Optional[str] = None,
     ) -> RemotionProps:
         """
         콘티 + 가사 + 클립 폴더를 기반으로 Remotion props 생성.
 
         Args:
             variant: 클립 variant (sub, veo, adult 등)
+            stills_variant: 스틸 variant (None이면 variant 재사용). KR-01처럼
+                           스틸 폴더와 클립 폴더의 variant가 다를 때 사용.
             audio_url_base: Remotion이 오디오를 가져올 베이스 URL
             clip_ext: 클립 확장자
             still_ext: 이미지 확장자
             playback_rates: shot_id → playbackRate 덮어쓰기 (None이면 실제 클립 길이로 자동 계산)
             transitions: shot_id → transition 덮어쓰기 ("cut" or "dissolve")
-            clip_url_prefix: 클립/스틸 URL 프리픽스 (없으면 audio_url_base 기반 추정)
+            clip_url_prefix / still_url_prefix: URL 프리픽스 수동 지정 (variant 규칙을 벗어날 때)
         """
+        stills_variant = stills_variant or variant
+
         # URL prefix 구성
         if clip_url_prefix is None:
             if self.layout.layout == "unified":
                 clip_url_prefix = f"{audio_url_base}/{self.track_id}/clips/{variant}"
-                still_url_prefix = f"{audio_url_base}/{self.track_id}/stills/{variant}"
             else:
                 clip_url_prefix = f"{audio_url_base}/videos/{self.track_id}_{variant}"
-                still_url_prefix = f"{audio_url_base}/stills/{self.track_id}-{variant}"
-        else:
-            still_url_prefix = clip_url_prefix
+
+        if still_url_prefix is None:
+            if self.layout.layout == "unified":
+                still_url_prefix = f"{audio_url_base}/{self.track_id}/stills/{stills_variant}"
+            else:
+                still_url_prefix = f"{audio_url_base}/stills/{self.track_id}-{stills_variant}"
 
         # 오디오 URL
         audio_path = self.layout.audio()

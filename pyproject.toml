@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odd-conti"
-version = "0.1.0"
+version = "0.1.1"
 description = "Storyboard (conti) YAML loader + Remotion props generator for ODD Engine tracks"
 readme = "README.md"
 requires-python = ">=3.10"
