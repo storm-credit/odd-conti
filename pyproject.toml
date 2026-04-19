@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odd-conti"
+version = "0.1.0"
+description = "Storyboard (conti) YAML loader + Remotion props generator for ODD Engine tracks"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Storm Credit" }]
+license = { text = "MIT" }
+keywords = ["remotion", "video", "storyboard", "conti", "pipeline"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Video",
+]
+dependencies = [
+    "pyyaml>=6.0",
+    "pydantic>=2.6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.1"]
+
+[project.urls]
+Homepage = "https://github.com/storm-credit/odd-conti"
+Repository = "https://github.com/storm-credit/odd-conti"
+
+[project.scripts]
+odd-conti = "odd_conti.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["odd_conti*"]
+exclude = ["tests*"]
